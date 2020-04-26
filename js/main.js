@@ -81,13 +81,13 @@ function loadShops(){
 function loadPage(){
 	$('#navbarLoginButton').html('Log out');
 	//$('#order-details-card').html(loading);
+	loadShops();
 	console.log('Requesting location access');
 	var watchID = navigator.geolocation.getCurrentPosition(function(position) {
 		console.log('Got location');
 		marker.setLatLng(new L.LatLng(position.coords.latitude, position.coords.longitude)); 
 		circle.setLatLng(new L.LatLng(position.coords.latitude, position.coords.longitude)); 
 		loadLists(position);
-		loadShops();
 	});
 }
 const RADIUS = 3; // In km
