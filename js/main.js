@@ -3,7 +3,15 @@ var BASE_URL = 'https://rhubarb-cake-22341.herokuapp.com/api/v1/';
 var orders;
 var loading = '<p class=\'card-text\'>Loading...</p>';
 var markers = [];
+var shopMarkers = [];
 var selectedMarker = 1;
+
+var shopIcon = L.icon({
+    iconUrl: 'images/marker_store.png',
+
+    iconSize:     [50, 50], // size of the icon
+    iconAnchor:   [25, 42], // point of the icon which will correspond to marker's location
+});
 
 function loadListDetails(position){
 	console.log(markers);
@@ -53,6 +61,22 @@ function loadLists(position){
 
 }
 
+function loadShops(){
+	shopMarkers = [];
+	$.get(BASE_URL + "shops/", function(data, status){
+		orders = data;
+		for(var order in data){
+			d = data[order];
+			shopMarkers.push(L.marker(
+				[d['ShopLatitude'], d['ShopLongitude']], 
+				{icon: shopIcon
+			}).on('click', markerClick).addTo(mymap));
+		}
+		selectMarker(1);
+	});
+
+}
+
 // Assuming logged in!
 function loadPage(){
 	$('#navbarLoginButton').html('Log out');
@@ -63,6 +87,7 @@ function loadPage(){
 		marker.setLatLng(new L.LatLng(position.coords.latitude, position.coords.longitude)); 
 		circle.setLatLng(new L.LatLng(position.coords.latitude, position.coords.longitude)); 
 		loadLists(position);
+		loadShops();
 	});
 }
 const RADIUS = 3; // In km
